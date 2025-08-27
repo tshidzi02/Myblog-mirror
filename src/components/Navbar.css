@@ -1,0 +1,24 @@
+/* Style for the navigation bar container */
+.navbar {
+  display: flex; /* Arrange buttons in a row */
+  justify-content: center; /* Center buttons horizontally */
+  gap: 1rem; /* Add space between buttons */
+  background-color: #282c34; /* Dark background */
+  padding: 1%; /* Space inside the navbar */
+}
+
+/* Style for each button inside the navbar */
+.navbar button {
+  color: white; /* White text */
+  background: none; /* Transparent background */
+  border: 1px solid white; /* White border */
+  padding: 0.5rem 1rem; /* Space inside the button */
+  cursor: pointer; /* Mouse pointer when hovering */
+  font-size: 1rem; /* Text size */
+  border-radius: 4px; /* Rounded corners */
+}
+
+/* Change button background on hover for better user feedback */
+.navbar button:hover {
+  background-color: #444; /* Dark gray background on hover */
+}

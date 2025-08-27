@@ -50,8 +50,6 @@ body,
 
 /* REMOVE the Vite centering (this caused the gap) */
 body {
-  /* display: flex;        ← delete this */
-  /* place-items: center;  ← delete this */
   min-width: 320px;
   min-height: 100dvh; /* d = dynamic viewport height */
   display: block; /* explicit reset (optional) */

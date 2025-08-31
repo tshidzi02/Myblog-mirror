@@ -1,35 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+// SUMMARY: Root page that renders Navbar and Hero
+/*
+  import: relative paths starting with "./" refer to local files.
+  CSS import: brings our Tailwind + custom CSS into the bundle.
+  <main>: semantic wrapper around primary document content.
+*/
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import "./index.css";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App(){
+  /* React component returns JSX fragment with our two child components */
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <main>
+      <Navbar />
+      <Hero />
+    </main>
+  );
 }
-
-export default App

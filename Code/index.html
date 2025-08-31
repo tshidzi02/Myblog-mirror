@@ -1,13 +1,17 @@
+<!-- SUMMARY: Set body fonts/colors via Tailwind classes; React mounts into #root -->
 <!doctype html>
 <html lang="en">
+  <!-- STUDY: <head> holds metadata, title, and links that load before the page shows -->
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- STUDY: viewport ensures responsive scaling on phones -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <title>MyBlog</title>
   </head>
-  <body>
+  <body class="font-body text-ink bg-wash">
+    <!-- STUDY: React will replace this <div> with our App component -->
     <div id="root"></div>
+    <!-- STUDY: Vite injects the compiled JS entry here -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1,3 +1,42 @@
+/* SUMMARY: Tailwind base + our fonts + a reusable purple "brush" effect */
+
+/* STUDY: Tailwind injects CSS reset + primitives */
+@tailwind base;
+/* STUDY: Optional component layer (we're not using custom components yet) */
+@tailwind components;
+/* STUDY: Utility classes like p-4, grid, text-xl, etc. */
+@tailwind utilities;
+
+/* STUDY: Load Google Fonts used by the mock (Poppins=display, Inter=body) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap');
+
+/* STUDY: Global background color via CSS var fallback; Tailwind class also sets it */
+:root { background: #eef1ff; }
+
+/* STUDY: A small gradient pill we place under "llo" in "Hello!" to mimic paint */
+.brush{
+  /* STUDY: left→right soft lilac gradient */
+  background: linear-gradient(90deg,#e6d6ff 0%,#c9a0ff 60%,#e6d6ff 100%);
+  /* STUDY: the brush should be a short horizontal strip */
+  height: 18px;
+  display: inline-block;
+  /* STUDY: lift it under the text and tilt slightly */
+  transform: translateY(-8px) rotate(-1deg);
+  /* STUDY: fully rounded ends for a paint-stroke look */
+  border-radius: 9999px;
+}
+
+:root {
+  background: #eef1ff;
+}
+.brush {
+  background: linear-gradient(90deg, #e6d6ff 0%, #c9a0ff 60%, #e6d6ff 100%);
+  height: 18px;
+  display: inline-block;
+  transform: translateY(-8px) rotate(-1deg);
+  border-radius: 9999px;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

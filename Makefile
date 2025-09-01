@@ -10,3 +10,6 @@ build: ; $(NPM) run build
 preview: ; $(NPM) run preview
 clean:
 	@rm -rf Code/dist
+
+supervisor:
+	node scripts/clean-on-save.mjs

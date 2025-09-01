@@ -1,19 +1,12 @@
-// SUMMARY: Root page that renders Navbar and Hero
+// SUMMARY: Sanity check — render simple text to prove mount works
 /*
-  import: relative paths starting with "./" refer to local files.
-  CSS import: brings our Tailwind + custom CSS into the bundle.
-  <main>: semantic wrapper around primary document content.
+  export default function App(): defines a React component named App.
+  returns: JSX (<div>...</div>) which the browser renders as HTML.
 */
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import "./index.css";
-
 export default function App(){
-  /* React component returns JSX fragment with our two child components */
   return (
-    <main>
-      <Navbar />
-      <Hero />
-    </main>
+    <div style={{padding: "2rem", fontSize: "1.5rem"}}>
+      It works 🎉 (React is mounted)
+    </div>
   );
 }

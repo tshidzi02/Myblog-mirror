@@ -1,8 +1,9 @@
-// SUMMARY: Vite/React entry that mounts <App /> into #root
+// SUMMARY: Mount <App /> into the #root div
 /*
-  ReactDOM.createRoot: concurrent renderer (since React 18).
-  document.getElementById("root"): selects the <div> in index.html.
-  <React.StrictMode>: dev-only checks for common mistakes.
+  import: brings code from another file into this one.
+  ReactDOM.createRoot: prepares a React "root" to render our component tree.
+  document.getElementById("root"): grabs the <div id="root"></div> in index.html.
+  <React.StrictMode>: dev-only checks for common mistakes (safe to keep).
 */
 import React from "react";
 import ReactDOM from "react-dom/client";

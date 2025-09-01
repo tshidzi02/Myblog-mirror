@@ -1,58 +1,45 @@
-import { watch as chokidarWatch } from "chokidar";
-import fs from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+// clean-on-save.mjs
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-/* Resolve project root based on where THIS file lives */
+// 📍 Get absolute path of project root
 const __filename = fileURLToPath(import.meta.url);
-const __dirname  = path.dirname(__filename);
-const ROOT = path.resolve(__dirname, "..");      // parent folder of /scripts
-const SRC  = path.join(ROOT, "Code");
-const OUT  = path.join(ROOT, "Supervisor");
+const __dirname = path.dirname(__filename);
+const ROOT = path.resolve(__dirname, '..');
 
-/* Safety: ensure Code/ exists, create Supervisor/ if needed */
-const srcExists = await fs.stat(SRC).then(() => true).catch(() => false);
-if (!srcExists) {
-  console.error("✗ Cannot find folder:", SRC);
-  console.error("  Expecting structure: <project>/{Code,Supervisor,scripts}");
-  process.exit(1);
-}
-await fs.mkdir(OUT, { recursive: true });
+// 📁 Define folders
+const SOURCE = path.join(ROOT, 'src');               // your detailed code
+const OUTPUT = path.join(ROOT, 'supervisor');        // auto-generated version
 
-const TEXT_EXT = new Set([".js",".jsx",".ts",".tsx",".css",".html",".json",".md",".txt",".svg"]);
+// 🔁 Recursively copy files from src → supervisor, stripping study comments
+async function cleanFolder(srcDir, destDir) {
+  const entries = await fs.readdir(srcDir, { withFileTypes: true });
 
-function strip(s,e){
-  if([".js",".jsx",".ts",".tsx"].includes(e)) return s.replace(/\/\*[\s\S]*?\*\//g,"");
-  if(e===".css") return s.replace(/\/\*\s*STUDY:[\s\S]*?\*\//gi,"");
-  if(e===".html") return s.replace(/<!--\s*STUDY:[\s\S]*?-->/gi,"");
-  return s;
-}
+  // Make sure destination folder exists
+  await fs.mkdir(destDir, { recursive: true });
 
-async function ensureDir(d){ await fs.mkdir(d,{recursive:true}); }
-async function copyOne(abs){
-  const rel = path.relative(SRC, abs);
-  const out = path.join(OUT, rel);
-  await ensureDir(path.dirname(out));
-  const ext = path.extname(abs).toLowerCase();
-  if (TEXT_EXT.has(ext)) {
-    const raw = await fs.readFile(abs, "utf8");
-    await fs.writeFile(out, strip(raw, ext), "utf8");
-  } else {
-    await fs.copyFile(abs, out);
-  }
-  console.log("✓", rel);
-}
-async function walk(dir){
-  for (const e of await fs.readdir(dir, { withFileTypes:true })) {
-    const abs = path.join(dir, e.name);
-    if (e.isDirectory()) await walk(abs); else await copyOne(abs);
+  for (const entry of entries) {
+    const srcPath = path.join(srcDir, entry.name);
+    const destPath = path.join(destDir, entry.name);
+
+    if (entry.isDirectory()) {
+      await cleanFolder(srcPath, destPath);
+    } else if (entry.name.endsWith('.js') || entry.name.endsWith('.jsx')) {
+      const content = await fs.readFile(srcPath, 'utf-8');
+
+      // 🧼 Remove /* ... */ comments (Study version)
+      const cleaned = content.replace(/\/\*[\s\S]*?\*\//g, '');
+
+      await fs.writeFile(destPath, cleaned);
+      console.log(`🧽 Cleaned: ${entry.name}`);
+    } else {
+      // For other files (images, CSS, etc.)
+      await fs.copyFile(srcPath, destPath);
+    }
   }
 }
 
-console.log("Initial build from:", SRC);
-await walk(SRC);
-
-const watcher = chokidarWatch("**/*", { cwd: SRC, ignoreInitial:true });
-watcher.on("add",    p => copyOne(path.join(SRC, p)));
-watcher.on("change", p => copyOne(path.join(SRC, p)));
-console.log("Watching for changes…  (OUT:", OUT, ")");
+// ✅ Run the script
+await cleanFolder(SOURCE, OUTPUT);
+console.log('✅ Supervisor version updated.');

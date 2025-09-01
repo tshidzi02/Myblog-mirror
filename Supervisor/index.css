@@ -1,11 +1,14 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* SUMMARY: Tailwind base + our fonts + a reusable purple "brush" effect */
 
 /* STUDY: Tailwind injects CSS reset + primitives */
-@tailwind base;
-/* STUDY: Optional component layer (we're not using custom components yet) */
-@tailwind components;
-/* STUDY: Utility classes like p-4, grid, text-xl, etc. */
-@tailwind utilities;
+/* ✅ TAILWIND V4+ SETUP */
+
 
 /* STUDY: Load Google Fonts used by the mock (Poppins=display, Inter=body) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap');

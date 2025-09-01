@@ -1,0 +1,12 @@
+# Node
+node_modules/
+Code/node_modules/
+Supervisor/node_modules/
+
+# Vite builds
+Code/dist/
+Supervisor/dist/
+
+# OS/IDE
+.DS_Store
+.vscode/

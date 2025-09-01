@@ -1,76 +1,58 @@
-import { watch as chokidarWatch } from "chokidar";   /* STUDY: file watcher */
-import fs from "node:fs/promises";                   /* STUDY: async fs API */
-import path from "node:path";                        /* STUDY: path utils */
-import process from "node:process";                  /* STUDY: cwd() etc. */
+import { watch as chokidarWatch } from "chokidar";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-// Reset output folder safely (cross-platform)
-await fs.rm(OUT, { recursive: true, force: true }).catch(()=>{});
+/* Resolve project root based on where THIS file lives */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
+const ROOT = path.resolve(__dirname, "..");      // parent folder of /scripts
+const SRC  = path.join(ROOT, "Code");
+const OUT  = path.join(ROOT, "Supervisor");
+
+/* Safety: ensure Code/ exists, create Supervisor/ if needed */
+const srcExists = await fs.stat(SRC).then(() => true).catch(() => false);
+if (!srcExists) {
+  console.error("✗ Cannot find folder:", SRC);
+  console.error("  Expecting structure: <project>/{Code,Supervisor,scripts}");
+  process.exit(1);
+}
 await fs.mkdir(OUT, { recursive: true });
 
+const TEXT_EXT = new Set([".js",".jsx",".ts",".tsx",".css",".html",".json",".md",".txt",".svg"]);
 
-/* STUDY: Important paths */
-const ROOT = process.cwd();                          /* STUDY: PROJECT1 root */
-const SRC  = path.join(ROOT, "Code");                /* STUDY: source folder */
-const OUT  = path.join(ROOT, "Supervisor");          /* STUDY: mirror folder */
-
-/* STUDY: Text file extensions (write as UTF-8). Everything else = binary copy */
-const TEXT_EXT = new Set([
-  ".js",".jsx",".ts",".tsx",".css",".html",".json",".md",".txt",".svg"
-]);
-
-/* STUDY: Make sure dir exists before writing */
-async function ensureDir(dir){ await fs.mkdir(dir, { recursive:true }); }
-
-/* STUDY: Strip study notes by file type */
-function strip(code, ext){
-  if ([".js",".jsx",".ts",".tsx"].includes(ext)) {
-    /* remove any block comment */
-    return code.replace(/\/\*[\s\S]*?\*\//g, "");
-  }
-  if (ext === ".css") {
-    /* remove only STUDY blocks */
-    return code.replace(/\/\*\s*STUDY:[\s\S]*?\*\//gi, "");
-  }
-  if (ext === ".html") {
-    /* remove only STUDY comments */
-    return code.replace(/<!--\s*STUDY:[\s\S]*?-->/gi, "");
-  }
-  return code;
+function strip(s,e){
+  if([".js",".jsx",".ts",".tsx"].includes(e)) return s.replace(/\/\*[\s\S]*?\*\//g,"");
+  if(e===".css") return s.replace(/\/\*\s*STUDY:[\s\S]*?\*\//gi,"");
+  if(e===".html") return s.replace(/<!--\s*STUDY:[\s\S]*?-->/gi,"");
+  return s;
 }
 
-/* STUDY: Copy one file from Code/ → Supervisor/ */
-async function copyOne(absSrc){
-  const rel   = path.relative(SRC, absSrc);          /* STUDY: e.g., src/App.jsx */
-  const absOut= path.join(OUT, rel);                 /* STUDY: Supervisor/src/App.jsx */
-  await ensureDir(path.dirname(absOut));
-  const ext = path.extname(absSrc).toLowerCase();
-
+async function ensureDir(d){ await fs.mkdir(d,{recursive:true}); }
+async function copyOne(abs){
+  const rel = path.relative(SRC, abs);
+  const out = path.join(OUT, rel);
+  await ensureDir(path.dirname(out));
+  const ext = path.extname(abs).toLowerCase();
   if (TEXT_EXT.has(ext)) {
-    const raw = await fs.readFile(absSrc, "utf8");   /* STUDY: read as text */
-    const cleaned = strip(raw, ext);                 /* STUDY: remove notes */
-    await fs.writeFile(absOut, cleaned, "utf8");     /* STUDY: write text */
+    const raw = await fs.readFile(abs, "utf8");
+    await fs.writeFile(out, strip(raw, ext), "utf8");
   } else {
-    await fs.copyFile(absSrc, absOut);               /* STUDY: binary copy */
+    await fs.copyFile(abs, out);
   }
   console.log("✓", rel);
 }
-
-/* STUDY: Walk the tree and process every file once */
 async function walk(dir){
-  const entries = await fs.readdir(dir, { withFileTypes:true });
-  for (const e of entries){
+  for (const e of await fs.readdir(dir, { withFileTypes:true })) {
     const abs = path.join(dir, e.name);
-    if (e.isDirectory()) await walk(abs);
-    else await copyOne(abs);
+    if (e.isDirectory()) await walk(abs); else await copyOne(abs);
   }
 }
 
-/* STUDY: Initial build + watcher */
-await ensureDir(OUT);
 console.log("Initial build from:", SRC);
 await walk(SRC);
 
 const watcher = chokidarWatch("**/*", { cwd: SRC, ignoreInitial:true });
 watcher.on("add",    p => copyOne(path.join(SRC, p)));
 watcher.on("change", p => copyOne(path.join(SRC, p)));
-console.log("Watching for changes…");
+console.log("Watching for changes…  (OUT:", OUT, ")");

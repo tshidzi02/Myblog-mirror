@@ -3,6 +3,11 @@ import fs from "node:fs/promises";                   /* STUDY: async fs API */
 import path from "node:path";                        /* STUDY: path utils */
 import process from "node:process";                  /* STUDY: cwd() etc. */
 
+// Reset output folder safely (cross-platform)
+await fs.rm(OUT, { recursive: true, force: true }).catch(()=>{});
+await fs.mkdir(OUT, { recursive: true });
+
+
 /* STUDY: Important paths */
 const ROOT = process.cwd();                          /* STUDY: PROJECT1 root */
 const SRC  = path.join(ROOT, "Code");                /* STUDY: source folder */

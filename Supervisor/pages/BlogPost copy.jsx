@@ -4,9 +4,9 @@ import Image1 from "../assets/images1.png";
 import Image2 from "../assets/image2.jpg"; 
 import Image3 from "../assets/image3.png"; 
 
-<img src={Image1} alt="Profile" className="rounded-full w-40 h-40" />,
-<img src={Image2} alt="Profile" className="rounded-full w-40 h-40" />,
-<img src={Image3} alt="Profile" className="rounded-full w-40 h-40" />
+<img src={Image1} alt="Profile" className="rounded-full w-80 h-80" />,
+<img src={Image2} alt="Profile" className="rounded-full w-80 h-80" />,
+<img src={Image3} alt="Profile" className="rounded-full w-80 h-80" />
 
 const blogPosts = [
   {
@@ -32,7 +32,7 @@ const blogPosts = [
   }
 ];
 
-export default function Blog() {
+export default function BlogPost() {
   return (
     <section className="p-4">
       <h2 className="text-2xl font-bold mb-4">📝 Blog Posts</h2>

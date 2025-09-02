@@ -1,24 +1,15 @@
-// SUMMARY: Top navigation bar with brand on the left and 5 links on the right
+// Navbar.jsx
+import { Link } from "react-router-dom";
 
-export default function Navbar(){
-  
+export default function Navbar() {
   return (
-    
-    <nav className="max-w-6xl mx-auto flex items-center justify-between py-6 px-4">
-      {}
-      <a href="#" className="font-display text-2xl font-extrabold tracking-tight">
-        Olivia Wilson
-      </a>
-
-      {}
-      <ul className="flex items-center gap-10 font-semibold">
-        {}
-        <li><a className="pb-1 border-b-2 border-ink" href="#">HOME</a></li>
-        {}
-        <li><a className="hover:opacity-70" href="#">BLOG</a></li>
-        <li><a className="hover:opacity-70" href="#">PODCAST</a></li>
-        <li><a className="hover:opacity-70" href="#">PORTFOLIO</a></li>
-        <li><a className="hover:opacity-70" href="#">CONTACT</a></li>
+    <nav className="w-full p-4 flex justify-between items-center bg-white shadow-md fixed top-0 z-50">
+      <div className="text-2xl font-bold text-black">Mutshidzi Madzivhandila</div>
+      <ul className="hidden md:flex space-x-6 text-lg font-medium">
+        <li><Link to="/profile" className="hover:text-purple-600">Profile</Link></li>
+        <li><Link to="/blog" className="hover:text-purple-600">Blog</Link></li>
+        <li><Link to="/education" className="hover:text-purple-600">Education</Link></li>
+        <li><Link to="/experience" className="hover:text-purple-600">Experience</Link></li>
       </ul>
     </nav>
   );

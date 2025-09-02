@@ -1,63 +1,40 @@
-// SUMMARY: Split hero — left portrait, right “Hello!” with brush and intro
-/*
-  import portrait: Webpack/Vite will copy this image into the final build.
-  <header>: semantic region for page-intro content.
-  absolute gradient circles: decorative shapes using Tailwind utilities.
-  grid layout: stacks on small screens; becomes 2 columns on large screens (lg:).
-*/
-import portrait from "../assets/portrait.jpg";
+// src/components/Hero.jsx
+import React from "react";
+import profileImg from "../assets/profile.jpg"; // adjust path if needed
 
-export default function Hero(){
+export default function Hero() {
   return (
-    /* relative: allow absolutely positioned circles to anchor to this container
-       overflow-hidden: keeps circles from overflowing visually */
-    <header className="relative overflow-hidden">
-      {/* Decorative circle 1 — small, left side */}
-      <div
-        /* pointer-events-none: not clickable; absolute: take out of flow;
-           -left-6 top-52: place it; size-28: w/h 7rem; rounded-full: circle;
-           bg-gradient-to-br: diagonal gradient from pink to lilac;
-           opacity-70: soften */
-        className="pointer-events-none absolute -left-6 top-52 size-28 rounded-full
-                   bg-gradient-to-br from-pink-300 to-lilac opacity-70"
-      ></div>
+    <section className="w-full min-h-screen bg-[#f7f7fb] flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-16 relative bg-gradient-to-br from-grey-100 to-pink-100">
+     {/* 🎨 Background Circles */}
+      <div className="absolute top-0 left-0 w-[250px] h-[250px] bg-gradient-to-br from-purple-600 to-pink-600 rounded-full opacity-40 z-0"></div>
+      <div className="absolute bottom-0 left-[-100px] w-[400px] h-[400px] bg-gradient-to-br from-pink-200 to-purple-200 rounded-full opacity-30 z-0"></div>
+      <div className="absolute top-[30%] right-[-80px] w-[180px] h-[180px] bg-gradient-to-br from-purple-200 to-pink-100 rounded-full opacity-40 z-0"></div>
+      <div className="absolute bottom-[10%] right-[10%] w-[120px] h-[120px] bg-gradient-to-br from-purple-100 to-pink-200 rounded-full opacity-40 z-0"></div>
 
-      {/* Decorative circle 2 — large, bottom-right with blur for depth */}
-      <div
-        className="pointer-events-none absolute -right-10 bottom-10 size-60 rounded-full
-                   bg-gradient-to-br from-pink-300 to-lilac opacity-60 blur-sm"
-      ></div>
 
-      {/* Content container: centered, two columns on large screens */}
-      <section className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center px-4 pb-16">
-        {/* LEFT: Portrait image — rounded corners + drop shadow */}
+      {/* 👩 Profile Image (Left) */}
+        <div className ="w-full md:w-1/2 z-10 flex justify-center">
         <img
-          src={portrait}                      /* file path imported above */
-          alt="Portrait of Olivia smiling"    /* accessibility text */
-          className="w-[520px] max-w-full rounded-3xl object-cover justify-self-center drop-shadow-xl"
-        />
+  src={profileImg}
+  alt="Profile"
+ className="rounded-full w-100 h-100 object-cover border-4 border-white shadow-xl"
+/>
+      </div>
 
-        {/* RIGHT: Heading + intro body */}
-        <div className="text-left">
-          {/* font-display: Poppins; text-[110px]: large; leading-[0.8]: tight lines */}
-          <h1 className="font-display text-[110px] leading-[0.8] tracking-tight">
-            {/* Trick: wrap 'llo' with a relative span; then add an absolutely
-               positioned .brush under it for the painted swash */}
-            He
-            <span className="relative">
-              llo
-              {/* aria-hidden: decorative only; absolute + -bottom-3: place under text */}
-              <span aria-hidden className="brush absolute left-0 right-0 -bottom-3"></span>
-            </span>
-            !
-          </h1>
+      {/* 👋 Hello Text + Sub-intro (Right) */}
+      <div className="w-full md:w-1/2 mt-10 md:mt-0 text-center md:text-left">
+        <h1 className="text-7xl font-bold leading-tight relative inline-block">
+          <span className="absolute -inset-1 transform -skew-x-12 bg-purple-300 opacity-50 rounded-md z-0"></span>
+          <span className="relative z-10">Hello!</span>
+        </h1>
 
-          {/* Bold intro line; mt-8 spacing; max-w for nice line length */}
-          <p className="mt-8 text-xl font-semibold max-w-xl">
-            I&apos;m Olivia. Photographer and designer. Welcome to my personal blog
-          </p>
-        </div>
-      </section>
-    </header>
+        <p className="mt-6 text-xl text-gray-800 font-medium leading-relaxed">
+          I'm <strong>Mutshidzi</strong>. Mathematics student and future Data Scientist.
+          <br />
+          Welcome to my personal blog and digital space.
+        </p>
+      </div>
+    </section>
+
   );
 }

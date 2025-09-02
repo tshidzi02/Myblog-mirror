@@ -15,9 +15,6 @@ body {
 /* ✅ TAILWIND V4+ SETUP */
 
 
-/* STUDY: Load Google Fonts used by the mock (Poppins=display, Inter=body) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@600;800&display=swap');
-
 /* STUDY: Global background color via CSS var fallback; Tailwind class also sets it */
 :root { background: #eef1ff; }
 

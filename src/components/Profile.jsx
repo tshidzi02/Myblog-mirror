@@ -1,11 +1,65 @@
-// src/components/Hero.jsx
-import React from "react";
+
+
+
 import profileImg from "../assets/profile.jpg"; // adjust path if needed
-
-
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../auth/AuthContext";
 
 export default function Profile() {
+  const { isLoggedIn } = useAuth()
+
+    // Load/save profile from localStorage so it persists
+  const [photo, setPhoto] = useState(() => localStorage.getItem("profile:photo") || "");
+  const [summary, setSummary] = useState(() => localStorage.getItem("profile:summary") || "Hi! I’m Mutshidzi. I love web dev and plan to build tools for healthcare.");
+
+  useEffect(() => { localStorage.setItem("profile:photo", photo); }, [photo]);
+  useEffect(() => { localStorage.setItem("profile:summary", summary); }, [summary]);
+
+  function handlePhoto(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => setPhoto(reader.result); // base64
+    reader.readAsDataURL(file);
+  }
+
   return (
+    <aside className="p-4 mt-16">
+      <h2 className="text-2xl font-bold mb-3">👤 Profile</h2>
+
+      {/* Photo (always visible) */}
+      <div className="mb-3">
+        {photo ? (
+          <img src={photo} alt="Profile" className="w-40 h-40 object-cover rounded-full border" />
+        ) : (
+          <div className="w-40 h-40 rounded-full border grid place-items-center text-gray-500">No Photo</div>
+        )}
+      </div>
+
+      {/* Summary (always visible) */}
+      <p className="text-gray-800 whitespace-pre-wrap">{summary}</p>
+
+      {/* Edit controls (login required) */}
+      {!isLoggedIn ? (
+        <p className="text-xs text-gray-500 mt-3">Add a new blog to Login to upload a photo and edit your summary.</p>
+      ) : (
+        <div className="mt-4 space-y-3">
+          <div>
+            <label className="block text-sm font-medium mb-1">Upload new profile photo</label>
+            <input type="file" accept="image/*" onChange={handlePhoto} className="w-full" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Edit profile summary</label>
+            <textarea
+              value={summary}
+              onChange={(e) => setSummary(e.target.value)}
+              rows="4"
+              className="w-full border rounded p-2"
+            />
+          </div>
+        </div>
+      )}
 
 
     <section className="w-full min-h-screen bg-[#f7f7fb] flex flex-col md:flex-row items-center justify-between px-6 md:px-20 py-16 relative bg-gradient-to-br from-grey-100 to-pink-100">
@@ -64,7 +118,7 @@ export default function Profile() {
       </div>
         </div>
     </section>
-    
-
+   </aside>
   );
-}
+}    
+

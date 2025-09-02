@@ -2,9 +2,12 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function BlogPost({ posts = [] }) {
+  /* STUDY: State variables for search, selected tags, and sort order */
   const [search, setSearch] = useState("");
   const [selectedTags, setSelectedTags] = useState(new Set());
+  const [sortOrder, setSortOrder] = useState("newest"); // newest | oldest
 
+  /* STUDY: Collect all unique tags from posts for the filter dropdown */
   const allTags = useMemo(() => {
     const bag = new Set();
     for (const p of posts) {
@@ -14,6 +17,7 @@ export default function BlogPost({ posts = [] }) {
     return Array.from(bag).sort((a, b) => a.localeCompare(b));
   }, [posts]);
 
+  /* STUDY: Add/remove a tag from the Set when clicked */
   function toggleTag(tag) {
     setSelectedTags(prev => {
       const next = new Set(prev);
@@ -22,9 +26,10 @@ export default function BlogPost({ posts = [] }) {
     });
   }
 
+  /* STUDY: Apply search + tag filtering + date sorting */
   const filteredPosts = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return posts.filter(p => {
+    const results = posts.filter(p => {
       const tagList = [
         ...(p.tag ? [String(p.tag)] : []),
         ...(Array.isArray(p.tags) ? p.tags : []),
@@ -37,9 +42,17 @@ export default function BlogPost({ posts = [] }) {
       const matchesSearch = q === "" || hay.includes(q);
       const noTagsChosen = selectedTags.size === 0;
       const matchesTags = noTagsChosen || tagList.some(t => selectedTags.has(t));
+
       return matchesSearch && matchesTags;
     });
-  }, [posts, search, selectedTags]);
+
+    // Sort results by date
+    return results.sort((a, b) => {
+      const da = new Date(a.date);
+      const db = new Date(b.date);
+      return sortOrder === "newest" ? db - da : da - db;
+    });
+  }, [posts, search, selectedTags, sortOrder]);
 
   return (
     <section className="p-4 mt-16">
@@ -50,7 +63,9 @@ export default function BlogPost({ posts = [] }) {
         </Link>
       </div>
 
+      {/* 🔎 Search + Sort + Tag filters */}
       <div className="flex flex-col gap-3 mb-5">
+        {/* Search bar */}
         <input
           type="text"
           placeholder="Search posts (title, content, tags)…"
@@ -58,6 +73,18 @@ export default function BlogPost({ posts = [] }) {
           onChange={(e) => setSearch(e.target.value)}
           className="w-full max-w-xl border rounded p-2"
         />
+
+        {/* Date sorting dropdown */}
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="w-full max-w-xs border rounded p-2"
+        >
+          <option value="newest">📅 Sort by Newest</option>
+          <option value="oldest">📅 Sort by Oldest</option>
+        </select>
+
+        {/* Tag multi-select dropdown */}
         {allTags.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
             {selectedTags.size > 0 && (
@@ -85,6 +112,7 @@ export default function BlogPost({ posts = [] }) {
 
       {filteredPosts.length === 0 && <p className="text-gray-600">No posts match your filters.</p>}
 
+      {/* Display posts */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPosts.map((post, index) => {
           const { title, date, tag, tags, image, content } = post;
@@ -100,15 +128,6 @@ export default function BlogPost({ posts = [] }) {
                     #{t}
                   </span>
                 ))}
-              </div>
-                  <div className="mt-4 flex gap-2">
-                <button
-                  onClick={() => onDeletePost?.(id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
-                {/* Optional: Edit button later */}
               </div>
               <p className="text-gray-700 mt-3">
                 {content?.slice(0, 120) || ""}{content && content.length > 120 ? "..." : ""}

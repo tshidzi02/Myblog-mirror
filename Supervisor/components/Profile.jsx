@@ -1,6 +1,10 @@
 // src/components/Hero.jsx
 import React from "react";
 import profileImg from "../assets/profile.jpg"; // adjust path if needed
+import { useAuth } from "../context/AuthContext";
+
+const { isLoggedIn } = useAuth();
+
 
 export default function Profile() {
   return (
@@ -62,6 +66,7 @@ export default function Profile() {
       </div>
         </div>
     </section>
+    </aside>
     
 
   );

@@ -2,6 +2,8 @@
 import React from "react";
 import profileImg from "../assets/profile.jpg"; // adjust path if needed
 
+
+
 export default function Profile() {
   return (
 
@@ -15,7 +17,7 @@ export default function Profile() {
 
 
       {/* 👩 Profile Image (Left) */}
-        <div className ="w-full md:w-1/2 z-20 flex justify-center">
+        <div className ="w-full md:w-1/2 z-10 flex justify-center">
         <img
   src={profileImg}
   alt="Profile"

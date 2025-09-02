@@ -1,67 +1,59 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React, { useState } from "react"
-import Navbar from './components/Navbar';
-import Profile from './components/Profile';
-import Education from './components/Education';
-import Experience from './components/Experience';
 
-import BlogPost from './pages/BlogPost'; // if you have blog detail view
-import CreatePost from "./pages/CreatePost";
+import BlogPost from "./pages/BlogPost";
+import Profile from "./components/Profile";
+import Education from "./components/Education";
+import Experience from "./components/Experience";
+import Navbar from "./components/Navbar";
+// src/App.jsx
+import { AuthProvider } from "./AuthContext";
+// other imports...
 
-import AddBlogPost from "./pages/AddBlogPost";
+import Image1 from "./assets/images1.png";
+import Image2 from "./assets/image2.jpg";
+import Image3 from "./assets/image3.png";
 
-function App() {
-
-  const initialPosts = [
+const posts = [
   {
     title: "How I Built My First Website",
     date: "August 2025",
     tag: "Web Dev",
-    image: "/src/assets/image1.png",
-    content: "I used React and Tailwind to build my first fully responsive web app."
+    image: Image1,
+    content: "I used React and Tailwind to build my first fully responsive web app.",
+    tags: ["HTML", "CSS", "React"]
   },
   {
     title: "My Internship at Masiphumelele Library",
     date: "July 2025",
     tag: "Internship",
-    image: "/src/assets/image2.jpg",
-    content: "During my internship, I helped digitize the book catalog and created a new website."
+    image: Image2,
+    content: "I helped digitize the book catalog and created a new website.",
+    tags: ["Community", "Digital"]
   },
   {
     title: "Study Tips for CS Students",
     date: "June 2025",
     tag: "Study Tips",
-    image: "/src/assets/image3.png",
-    content: "Here are my top 5 methods for managing stress and boosting marks as a computer science student."
+    image: Image3,
+    content: "Here are my top 5 methods for managing stress and boosting marks.",
+    tags: ["Study", "Productivity"]
   }
 ];
 
-const [posts, setPosts] = useState(initialPosts);
-
-
-  const addPost = (newPost) => {
-    setPosts([newPost, ...posts]);
-  };
-
+export default function App() {
   return (
     <>
+     <AuthProvider>
       <Navbar />
       <Routes>
+        <Route path="/login" element={<Login />} />
+
         <Route path="/" element={<Profile />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/education" element={<Education />} />
         <Route path="/experience" element={<Experience />} />
-        <Route path="/blog" element={<BlogPost />} />
-        <Route path="/blog/:id" element={<BlogPost />} />
-        <Route path="/blog/new" element={<CreatePost onAddPost={(post) => {
-  // 🧠 Save to localStorage or Context later
-  console.log("New post submitted:", post);
-        <Route path="/blog/new" element={<AddBlogPost addPost={addPost} />} />
-}} />} />
-
+        <Route path="/blog" element={<BlogPost posts={posts} />} />
       </Routes>
-    </>
-  );
+       </AuthProvider>
+    </>);
 }
-
-export default App;

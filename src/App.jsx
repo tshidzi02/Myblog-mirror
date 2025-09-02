@@ -6,6 +6,9 @@ import Education from "./components/Education";
 import Experience from "./components/Experience";
 import Navbar from "./components/Navbar";
 
+// other imports...
+
+
 import Image1 from "./assets/images1.png";
 import Image2 from "./assets/image2.jpg";
 import Image3 from "./assets/image3.png";
@@ -40,13 +43,17 @@ const posts = [
 export default function App() {
   return (
     <>
+     
       <Navbar />
       <Routes>
+ 
+
         <Route path="/" element={<Profile />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/education" element={<Education />} />
         <Route path="/experience" element={<Experience />} />
-        <Route path="/blog/:id" element={<BlogPost posts={posts} />} />
+        <Route path="/blog" element={<BlogPost posts={posts} />} />
       </Routes>
+      
     </>);
 }
